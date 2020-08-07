@@ -32,6 +32,7 @@ It contains [face_server](#face_server), [RTMP](#rtmp) module.
 Mainly use Dart programming language and flutter framework.
 
 ### server
+Mainly use Python programming language, paho-mqtt and Flask framework
 
 ## Module specification
 

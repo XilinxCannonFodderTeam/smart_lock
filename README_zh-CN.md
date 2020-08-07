@@ -28,6 +28,7 @@
 主要使用Dart编程语言和flutter框架。
 
 ### 服务器端
+主要使用Python实现，基于paho-mqtt和Flask框架
 
 ## 模块说明
 
