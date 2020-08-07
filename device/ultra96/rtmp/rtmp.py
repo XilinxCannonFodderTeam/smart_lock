@@ -3,6 +3,7 @@ import cv2 as cv
 import time
 
 # 请更改目标地址
+# Change the Server (Target) Address
 rtmpUrl = "rtmp://localhost:1935/videotest/test"
 # camera_path = ""
 cap = cv.VideoCapture(0)
@@ -28,6 +29,7 @@ command = ['ffmpeg',
         rtmpUrl]
 
 # 管道配置
+# Configure the Tube
 p = sp.Popen(command, stdin=sp.PIPE)
 
 # read webcamera
