@@ -19,13 +19,21 @@
 
 ### 设备端
 
-它包含有[RTMP](#rtmp)模块。
+主要使用了开源的OpenCV、dlib、ffmpeg库。
+
+它包含有[face_server](#face_server)、[RTMP](#rtmp)模块。
 
 ### APP端
+
+主要使用Dart编程语言和flutter框架。
 
 ### 服务器端
 
 ## 模块说明
+
+### <a id="face_server">face_server</a>
+
+这个模块主要用于人脸识别。
 
 ### <a id="rtmp">RTMP</a>
 

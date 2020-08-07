@@ -23,13 +23,21 @@ The project is divided into device side, APP side and server side
 
 ### device
 
-It contains [RTMP](#rtmp) module.
+The open source OpenCV, dlib, and ffmpeg libraries are mainly used.
+
+It contains [face_server](#face_server), [RTMP](#rtmp) module.
 
 ### APP
+
+Mainly use Dart programming language and flutter framework.
 
 ### server
 
 ## Module specification
+
+### <a id="face_server">face_server</a>
+
+This module is mainly used for face recognition.
 
 ### <a id="rtmp">RTMP</a>
 
