@@ -10,33 +10,33 @@ import logging
 import threading
 
 
-# 单例模式的开启标识，如果为真，则启用单例模式
-# 用于自动导入时函数自动引用
+# 单例模式的开启标识，如果为真，则启用单例模式 | The open flag of singleton mode, if it is true, singleton mode is enabled
+# 用于自动导入时函数自动引用 | Used to automatically reference functions during automatic import
 ON_SINGLE_PATTERN = False
 
 def _save_input_py_file(msg):
     payload = str(msg.payload, encoding="utf-8")
     first_space = payload.find(' ')
     if first_space < 0:
-        return                                 #说明问题的调用，开头应该是函数的别名
-    path_and_context = payload[first_space+1:] #返回的是第一个空格的位置，所以不要空格所以+1
+        return                                 #说明问题的调用，开头应该是函数的别名 | The call to explain the problem should be the alias of the function at the beginning
+    path_and_context = payload[first_space+1:] #返回的是第一个空格的位置，所以不要空格所以+1 | Return the first position os <SPACE>, so add 1
     second_space = path_and_context.find(' ')
-    if second_space < 0:                       #说明格式不正确
+    if second_space < 0:                       #说明格式不正确 | Indicate format is not valid
         return
-    path = path_and_context[:second_space]     #空格不要
+    path = path_and_context[:second_space]     #空格不要 | No <SPACE>
     file_context = path_and_context[second_space+1:]
     relpath = os.path.relpath(path)
-    if relpath.startswith(".."):               #说明路径不再当前目录下
+    if relpath.startswith(".."):               #说明路径不再当前目录下 | Indicate the directory
         return 
-    with open(relpath,"w") as f:               #此处不检查文件格式
+    with open(relpath,"w") as f:               #此处不检查文件格式 | Here we do not examine the format of file
         f.write(file_context)
 
 def _load_python_file(msg, client):
     payload = str(msg.payload, encoding="utf-8")
     first_space = payload.find(' ')
     if first_space < 0:
-        return                                 #说明问题的调用，开头应该是函数的别名
-    file_paths = payload[first_space+1:]       #返回的是第一个空格的位置，所以不要空格所以+1
+        return                                 #说明问题的调用，开头应该是函数的别名 | Indicate the call of question, so the head shold be the Alias of funcion
+    file_paths = payload[first_space+1:]       #返回的是第一个空格的位置，所以不要空格所以+1 | Return the first position os <SPACE>, so add 1
     client.load_python_module(file_paths)
 
 
@@ -52,20 +52,21 @@ def get_topic_and_payload(msg):
 
 class device_interface(mqtt.Client):
     """
-        mqtt.Client的继承接口
+        mqtt.Client的继承接口 |  The Inherit Interface of mqtt.Client
 
-        订阅消息，使用subscribe(topic,qos)接口
+        订阅消息，使用subscribe(topic,qos)接口 | Subscrible Message, Use subscribe(topic, qos) Interface
 
-        发布消息，使用publish(topic,payload,qos)接口
+        发布消息，使用publish(topic,payload,qos)接口 | Publish Message, Use publich(topic, payload, qos) Interface
 
-        连接服务器使用run(device_type,host,port)接口
+        连接服务器使用run(device_type,host,port)接口 | Connect Sever, Use run(device_type, host, port) Interface
 
-        topic：主题，主题可以订阅也可以发布，对于发布，所有订阅改主题的客户端均会收到发布的消息
-        payload：发布的消息，为字符串，推荐长度不超过700字节
-        qos：连接的质量等级，0为最低，2为最高，由于设备性能足够，所以2是可以接受的
-        host：连接的broker主机
-        port：连接的broker主机mqtt端口
-        device_type：定义的设备类型，暂时无用
+        topic：主题，主题可以订阅也可以发布，对于发布，所有订阅改主题的客户端均会收到发布的消息 | topic: Topic can be subscribed or published. 
+                                                                                         For publishing, all clients that subscribe to the topic will receive the published message
+        payload：发布的消息，为字符串，推荐长度不超过700字节 | payload: Message published, a string, recommend length less than 700 Byte
+        qos：连接的质量等级，0为最低，2为最高，由于设备性能足够，所以2是可以接受的 | qos: Level of Quality, 0 ~ 2, because of the device with enough performance, so 2 is available
+        host：连接的broker主机 | The connective Broker Host
+        port：连接的broker主机mqtt端口 | The MQTT port of connective Broker Host
+        device_type：定义的设备类型，暂时无用 | Defined type of Device ( NOT Used )
     """
 
     __instance_lock = threading.Lock()
@@ -83,7 +84,7 @@ class device_interface(mqtt.Client):
     def __init__(self, client_id="test1", clean_session=None, 
             userdata=None,protocol=4, transport="tcp"):
         """
-            client_id：客户端的id号，推荐以'device名称/MAC地址'格式命名
+            client_id：客户端的id号，推荐以'device名称/MAC地址'格式命名 | client_id: ID of Client，recommended name is " 'the name of device'/'MAC Address' "
         """
         super(device_interface,self).__init__(
             client_id=client_id, clean_session=clean_session, 
@@ -120,7 +121,7 @@ class device_interface(mqtt.Client):
         for path in file_paths:
             relpath = os.path.relpath(path)
             if not relpath.startswith('..'):
-                tmp = relpath.split(os.sep)           #文件路径的分隔符
+                tmp = relpath.split(os.sep)           #文件路径的分隔符 | the delimiter of file path
                 package = tmp[0][:-3]
                 relpath = "." + "/".join(tmp[1:])  #懒得去修改了，反正python自动转义
                 module = importlib.import_module(relpath, package)
@@ -336,15 +337,15 @@ class device_interface(mqtt.Client):
 
     def search_exct_api_by_str(self,msg):
         """
-            根据订阅topic返回的信息执行函数，此函数不应该被直接调用
-            msg：mqtt返回的信息，包括topic和payload
+            根据订阅topic返回的信息执行函数，此函数不应该被直接调用 | Execution function according to the message ruturned from subscrible topic 
+            msg：mqtt返回的信息，包括topic和payload | msg: The returned message from MQTT, include Topic and Payload
 
             self.quick_search_for_api：
-                1.True时，对于没有加空格的调用命令，也可以实现调用
-                2.False时，必须严格的按照格式发送消息
-                3.此变量推荐为False
-                4.不要在添加Action后再修改此值，会出错
-                5.功能暂未实现，请不要调用
+                1.True时，对于没有加空格的调用命令，也可以实现调用 | True: Calling commands without spaces can also be called
+                2.False时，必须严格的按照格式发送消息 | False: Messages must be sent in strict accordance with the format
+                3.此变量推荐为False | Recommend to set the variable to False
+                4.不要在添加Action后再修改此值，会出错 | Do NOT update the value after add actions, or it will be cause an error
+                5.功能暂未实现，请不要调用 | The feature is not yet implemented, please NOT call it
         """
         payload = str(msg.payload,encoding="utf-8")
         if msg.topic in self.topic_in_use:
@@ -353,12 +354,12 @@ class device_interface(mqtt.Client):
             if self.use_quick_search:
                 self.quick_search_for_api(msg)
             else:
-                # 对函数进行搜索，如果没找到则使用默认的函数进行处理
+                # 对函数进行搜索，如果没找到则使用默认的函数进行处理 | search functions, if functions are not found, we will use default function to handle
                 if payload.split()[0] in self.action.keys():
                     func = self.action[payload.split()[0]]
                 elif self.default_func:
                     func = self.default_func
-                # 依据函数的参数数量进行调用
+                # 依据函数的参数数量进行调用 | According to the numbers of functions parameters to call
                 func_argc = func.__code__.co_argcount
                 print("calling func name:",func.__name__)
                 # print("using func:"+func.__name__+"\r\narg count is "+str(func_argc))
@@ -376,25 +377,25 @@ class device_interface(mqtt.Client):
 
     def build_quick_search(self,action,action_name=None):
         """
-            使用quick_search_for_api的必要函数，构建查找表
+            使用quick_search_for_api的必要函数，构建查找表 | the necessary function to use quick_search_for_api to construct Look-Up Table
 
-            不应该被外部调用
+            不应该被外部调用 | Shold NOT call externaly
         """
         pass
     
     def quick_search_for_api(self,msg):
         """
-            利用查找表，提升查找速度，针对的是不严格的接口形式
+            利用查找表，提升查找速度，针对的是不严格的接口形式 | Use Look-Up Table to speed search velocity, which consider the unstrict Interface Form
 
-            严格实现的接口至少和search_exct_api_by_str一样快
+            严格实现的接口至少和search_exct_api_by_str一样快 | Use strict Interface Implement can be as fast as search_exct_api_by_str at least
         """
         pass
 
     def on_connect(self, mqttc, obj, rc):
         """
-            建立和broker连接后的回调
+            建立和broker连接后的回调 | establish the recall function after Broker connectived
 
-            rc==0时表示正确的连接，请不要修改此函数
+            rc==0 时表示正确的连接，请不要修改此函数 NOTE! Please not modify the function! rc == 0 implies the connection is correct
         """
         if rc == 0:
             logging.info(self._rc_mean[rc])
@@ -408,14 +409,14 @@ class device_interface(mqtt.Client):
  
     def on_publish(self, mqttc, obj, mid):
         """
-            成功发布消息后的回调
+            成功发布消息后的回调 | recall function after publish message successfully
         """
         logging.info("OnPublish, mid: "+str(mid))
 
     
     def on_subscribe(self, mqttc, obj, mid, granted_qos):
         """
-            成功订阅后的回调
+            成功订阅后的回调 | recall function after subscrible topic successfully
         """
         logging.info("Subscribed: "+str(mid)+" "+str(granted_qos))
     
@@ -424,11 +425,11 @@ class device_interface(mqtt.Client):
     
     def on_message(self, mqttc, obj, msg):
         """
-            获得订阅消息推送的回调函数，会依据消息执行函数
+            获得订阅消息推送的回调函数，会依据消息执行函数 | Callback Function to obtain the subscrible message which wolud perform according to the message
 
-            msg:订阅的topic,以及订阅的消息payload
+            msg:订阅的topic,以及订阅的消息payload | msg: the subscrible topic, payload: the subscrible message
 
-            请不要修改此函数
+            请不要修改此函数 | NOTE! Please NOT modify the function
         """
         curtime = datetime.datetime.now()
         strcurtime = curtime.strftime("%Y-%m-%d %H:%M:%S")
@@ -438,14 +439,14 @@ class device_interface(mqtt.Client):
 
     def run(self,device_type,host,port):
         """
-            客户端运行，其会新建一个线程，不会造成阻塞的问题
-            请运行期间调用一次，不要多次调用
-            device_type：设备的类型+命名，暂未使用
-            host：连接的broker服务器
-            port：连接的broker服务器的mqtt服务端口
+            客户端运行，其会新建一个线程，不会造成阻塞的问题 | Run Server, which will rebulid thread ( NOT cause blocking problem )
+            请运行期间调用一次，不要多次调用 | Please call once during running process ( NOT call it repeatedly )
+            device_type：设备的类型+命名，暂未使用 | device_type: the type of device and name ( NOT Used Temporarily)
+            host：连接的broker服务器 | host: the connective Broker Server
+            port：连接的broker服务器的mqtt服务端口 | port: the MQTT server port of connective Broker Server
         
         """
-        # 设置账号密码（如果需要的话）
+        # 设置账号密码（如果需要的话）| Set the User Name and Password ( if you need )
         #self.client.username_pw_set(username, password=password)
         if not self.__on_running:
             self.host = host
@@ -459,9 +460,9 @@ class device_interface(mqtt.Client):
 
     def add_subscribe(self, topic, qos = 0, options=None, properties=None):
         """
-            为了保证订阅在保存后可以自动恢复，请使用此函数订阅
+            为了保证订阅在保存后可以自动恢复，请使用此函数订阅 | To ensure the subscription could recover after saving, Please use the function to subscrible topic
 
-            注意，options 以及 properties 暂不支持
+            注意，options 以及 properties 暂不支持 | NOTE! Options and properties is not currently supported
         """
         if topic:
             self.__topic_subscribe.append(topic)
