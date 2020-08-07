@@ -130,9 +130,9 @@ class device_interface(mqtt.Client):
 
     def __get_func_by_path(self,func_name,func_abs_path):
         """
-            此函数的功能是依据函数名称和函数所在文件的绝对路径，
-            实现函数的导入功能
-            原理是使用了python的importlib
+            此函数的功能是依据函数名称和函数所在文件的绝对路径， | To implement the export function 
+            实现函数的导入功能 | according to the function's name and absoulute directory of  file
+            原理是使用了python的importlib | Used python.importlib
         """
         path = os.path.relpath(func_abs_path)
         path = path[:-3]
@@ -146,7 +146,7 @@ class device_interface(mqtt.Client):
 
     def __set_action_by_action_load(self):
         """
-            此函数是将所有的self.action_load记录的函数名，函数所在文件对进行导入
+            此函数是将所有的self.action_load记录的函数名，函数所在文件对进行导入 | Import all the name and file of functions recorded by self.action_load
         """
         for action in self.action_load.keys():
             func = self.__get_func_by_path(action, self.action_load[action])
@@ -155,9 +155,9 @@ class device_interface(mqtt.Client):
 
     def load_from_config(self, config_file_path = None):
         """
-            此函数需要与提供的save_to_config一起使用
-            config_file_path：的默认位置是同级目录下的config.json
-            return：返回0表示成功的从配置文件导入,否则为失败
+            此函数需要与提供的save_to_config一起使用 | NEED save_to_config Function
+            config_file_path：的默认位置是同级目录下的config.json | config_file_path: Default location is the config.json in the same directory
+            return：返回0表示成功的从配置文件导入,否则为失败 | return: Return 0 to indicate successful import from the configuration file, otherwise it fails
         """
         config_file_path = config_file_path if config_file_path else self.__config_file_path
         if not os.path.isfile(config_file_path):
@@ -200,8 +200,8 @@ class device_interface(mqtt.Client):
 
     def save_to_config(self, config_file_path = None):
         """
-            此函数需要与提供的load_from_config一起使用
-            config_file_path：的默认位置是同级目录下的config.json
+            此函数需要与提供的load_from_config一起使用 | NEED load_from_config Function
+            config_file_path：的默认位置是同级目录下的config.json | configure_file_path: Default location is the config.json in the same directory
         """
         config_file_path = config_file_path if config_file_path else self.__config_file_path
         info_to_save = {}
@@ -239,7 +239,7 @@ class device_interface(mqtt.Client):
     def add_app_device_id_pair(self, appid, deviceid):
         if appid or deviceid:
             return -1
-        # 如果这个id对在双方的键值表中都有，说明无需添加
+        # 如果这个id对在双方的键值表中都有，说明无需添加 | If ID is in the key-value tables between C/S, the id neeed not to add
         if appid in self.device_pair_app2device.keys() and \
             deviceid in self.device_pair_device2app.keys():
             return -1
@@ -281,24 +281,29 @@ class device_interface(mqtt.Client):
     
     def add_action(self,action,action_name=None):
         """
-            一个接口的添加函数，其添加客户端执行的接口集合
-            当客户端接收到消息时，会调用on_message回调，此回调请不要覆盖，其依据接收的消息调用
-            self.action中的函数
+            一个接口的添加函数，其添加客户端执行的接口集合 | A Function used to add Interface which add a set of actions Server perform
+            当客户端接收到消息时，会调用on_message回调，此回调请不要覆盖，其依据接收的消息调用 | Do NOT cover the on_message call according to received message 
+                                                                                          when Sever receives message
+            self.action中的函数 | Functions in self.action
 
-            当满足msg.payload.split()[0]在self.action的keys中时，会调用此key对应的action函数
+            当满足msg.payload.split()[0]在self.action的keys中时，会调用此key对应的action函数 | When msg.payload.split()[0] is satisfied in the keys of self.action, 
+                                                                                            the action function corresponding to this key will be called 
 
-            action：添加的函数，目前没有专门设定函数的输入，请先默认不使用输入
-            action_name：添加的键值，以此键值作为调用的依据，如果为None就使用函数本身的名字
+            action：添加的函数，目前没有专门设定函数的输入，请先默认不使用输入 | action: Added functions, default is no input ( NO specially setting function input currently )
+            action_name：添加的键值，以此键值作为调用的依据，如果为None就使用函数本身的名字 | action_name: Added key-value, use key-value to call function, None means the name of function
 
-            action要求：
-                1.目前参数的数量不要超过2个，对应的位置会传入对应参数
-                2.返回值可以为空，但如果返回请使用str类型
-                3.有返回值时，格式约定为\"topic 实际返回值\"，topic指定你发送的目标，实际返回值为你希望发送的信息
+            action要求： | Request of action
+                1.目前参数的数量不要超过2个，对应的位置会传入对应参数 | The number of parameters is less or equal to 2, Pass in the corresponding parameters at the corresponding position
+                2.返回值可以为空，但如果返回请使用str类型 | Function could reutrn to Null, if not, Please return to str type
+                3.有返回值时，格式约定为\"topic 实际返回值\"，topic指定你发送的目标，实际返回值为你希望发送的信息 | If function returns str type, its Format is
+                                                                                                             \"topic return value\", the real return value is
+                                                                                                             the message you wanted to send
 
-            action参数要求：
-                1.如果没有参数，就直接调用
-                2.如果只有一个参数，只传递msg，也就是MQTTmessage类
-                3.如果有两个参数，则第一个参数传递msg，第二个参数传递device_interface的实例
+            action参数要求： | Request of parameters of action
+                1.如果没有参数，就直接调用 | If function have NO parameter, please call directly
+                2.如果只有一个参数，只传递msg，也就是MQTTmessage类 | If function have single parameter, Please pass the msg ( MQTTmessage Class )
+                3.如果有两个参数，则第一个参数传递msg，第二个参数传递device_interface的实例 | If function have 2 parameter, The first passes msg, 
+                                                                                         The second passes instance of device_interface
 
         """
         if self.__check_func_can_be_add(action) != 0:
