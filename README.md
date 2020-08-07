@@ -36,3 +36,59 @@ It contains [RTMP](#rtmp) module.
 This is the video streaming module
 
 > The Nginx server needs to be configured before the project runs
+
+#### If the server has been configured
+
+##### Modify the rtmp.py file
+
+Change ```localhost``` to your server address, and then change ```port``` to the port you configured
+
+```python
+rtmpUrl = "rtmp://localhost:port/videotest/test"
+```
+
+##### Modify camera parameters
+
+> Note: Due to openCV itself, some cameras may not be successfully called on Linux
+
+If you want to call the built-in camera, there is no need to change it.
+
+If you want to call USB-Camera or other cameras, please put ```0``` in
+
+```python
+cap = cv.VideoCapture(0)
+```
+
+to ```1``` or ```2```
+
+```python
+cap = cv.VideoCapture(1)
+# or
+cap = cv.VideoCapture(2)
+```
+
+If you are not sure of your camera parameters, you can enter
+
+```bash
+ls /dev/vi*
+```
+
+##### Run
+
+```bash
+python rtmp.py
+```
+
+Then the camera image is streamed to the server
+
+#### Configure the server
+
+Please refer to Nginx related documents
+
+> The port configuration file is ```nginx.conf```, please modify as appropriate
+
+#### Test
+
+```bash
+sudo ffmpeg -re -i test.mp4 -vcodec copy -acodec copy -b:v 800k -b:a 32k -f flv rtmp://localhost:port/videotest/test
+```

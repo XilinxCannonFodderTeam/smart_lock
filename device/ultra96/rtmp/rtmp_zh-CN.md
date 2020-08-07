@@ -1,5 +1,7 @@
 # RTMP中文文档
 
+If you want to read the English document, please check our [README](../../../README.md) on the homepage.
+
 > 该项目运行前需要配置好Nginx服务器
 
 ## 如果已经配置好服务器

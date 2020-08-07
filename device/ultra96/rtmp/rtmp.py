@@ -40,7 +40,7 @@ while(cap.isOpened()):
         break
 
     # process frame
-    # your code
+    # your optional code
     # process frame
 
     # write to pipe
