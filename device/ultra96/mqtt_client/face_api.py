@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
-#-----获取人脸样本-----
+#-----获取人脸样本------
+#-Obtian Face Samples -
 import cv2
 import face_recognition
 import time
@@ -9,6 +10,7 @@ import threading
 face_ids = set()
 source_list = ['obama.jpg']
 # 照片不要大于200K
+# the volume of picture should be less than 200 KB
 # source_list = ['zyc.jpg', 'xjt.jpg']
 known_encodings = []
 
@@ -34,14 +36,23 @@ def crop_face(img, face_location):
     return ret
 
 def get_face(cap, face_id, count, cascade = './haarcascade_frontalface_alt2.xml'):
-    
+    # -----------------!---------------- NOTE ------------------!--------------
+    # Call the notebook built-in camera, the parameter is 0, 
+    # if there are other cameras, you can adjust the parameter cap to 1,2
+    # --------------------------------------------------------------------------
+    # Call the face classifier and adjust it according to the actual path
+    # If you change this, be sure to change the classifier in the recognition file
     face_detector = cv2.CascadeClassifier(cascade)
     while True:
         img = get_image(cap)
         if img is None:
             continue
+        # Convert to gray image to improve accuracy
         gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         time.sleep(0.1)
+        # Where img is the gray image to be detected, 
+        # 1.2 is the ratio of each image size reduction, and 
+        # 5 is minNeighbors
         faces = face_detector.detectMultiScale(img, 1.2, 5)
         if len(faces):
             if face_id:
@@ -63,10 +74,14 @@ def rec_unknown(img):
 
 def add_face(get_face_num, video_in):
     cap = cv2.VideoCapture(video_in)
+    # Mark the face ID
     face_id = input('\nPlease Input User name, and Look at the camera and wait ...\n')
     face_ids.add(face_id)
+    # Frame selection of faces, for loop to ensure 
+    # a real-time dynamic video stream that can be detected
     for i in range(get_face_num):
         get_face(cap, face_id, i)
+    # release the camera
     cap.release()
 
 
@@ -77,9 +92,11 @@ def detect(video_in):
         face_id = rec_unknown(img)
         if face_id:
             # TODO 识别到熟人
+            # TODO recognize the owner
             return img,face_id
         else:
             # TODO 识别到生人
+            # TODO recognize the stranger
             return img,None
 
 
