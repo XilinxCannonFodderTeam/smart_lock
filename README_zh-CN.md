@@ -4,6 +4,14 @@
 
 本项目是基于MQTT，Flutter以及Dlib和Ultra 96板卡的智能门锁系统。APP端具有添加设备、远程控制以及视频串流的功能，设备端能够识别陌生人后拍照回传并且支持多用户操作，服务器端则负责设备间通信等操作。
 
+## Quick Start
+本项目的setup没有经过测试，所以不保证正确执行，建议直接git下整个项目后按步骤依次对app,device和server端进行配置。
+
+打开你的Ultra96的终端，确保联网，输入：
+```
+sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lock.git
+```
+
 ## 未来计划
 
 ### 考虑进一步添加的功能
