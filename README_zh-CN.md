@@ -36,6 +36,48 @@
 
 这个模块主要用于人脸识别。
 
+基于 OpenCV 和 dlib 开发了 face_api 模块。
+
+>项目运行前需要在目录下载入一张智能锁主人的图片
+
+首先从该模块中引入 detect, encode_face 函数用于检测人脸，编码人脸，再引入 matplotlib 与 time 库用于在 Jupyter Notebook 环境下显示拍摄的图像并测量识别时间。
+
+#### 载入主人图片并编码
+
+```python
+encode_face('owner.jpg')
+img_lists = []
+```
+
+使用 encode_face 载入智能锁主人的图片，再创建一个空列表 img_list 用于存储摄像头拍摄的图片。
+
+#### 截取人脸图像并识别
+
+```python
+i = 0
+while i < 4:
+    time.sleep(0.1)
+    img,face_id = detect(0)
+    img_lists.append(img)
+    i += 1
+    if not face_id:
+        print("Find Stranger!")
+    else:
+        print("Find ",face_id)
+```
+
+在 Demo 中，设定截取4张人像图片，每次截取之间间隔0.1秒，将截取的图片通过 list.append 方法存入 img_list 列表，若识别到智能锁主人，则输出 Find + 载入图像的 face ID，否则输出 Find Stranger。
+
+#### 在笔记本显示人脸图像
+
+```python
+for i in img_lists:
+    plt.figure()
+    plt.imshow(i)
+```
+
+可在识别后，使用 pyplot.figure 和 pyplot.imshow 显示拍摄到的人脸图像。
+
 ### <a id="rtmp">RTMP</a>
 
 这是视频串流模块

@@ -40,6 +40,47 @@ Mainly use Python programming language, paho-mqtt and Flask framework
 
 This module is mainly used for face recognition.
 
+The face_api module is developed based on OpenCV and dlib.
+
+>Before the project runs, you need to download a picture of the smart lock owner in the directory
+
+First, the detect, encode_face function is introduced from this module to detect and encode faces, and then the matplotlib and time libraries are introduced to display the captured images in the Jupyter Notebook environment and measure the recognition time.
+
+#### Load the owner's picture and encode
+
+```python
+encode_face('owner.jpg')
+img_lists = []
+```
+
+Use encode_face to load the picture of the smart lock owner, and then create an empty list img_list to store the pictures taken by the camera.
+
+#### Capture and recognize face images
+
+```python
+i = 0
+while i < 4:
+    time.sleep(0.1)
+    img,face_id = detect(0)
+    img_lists.append(img)
+    i += 1
+    if not face_id:
+        print("Find Stranger!")
+    else:
+        print("Find ",face_id)
+```
+
+In the Demo, set to intercept 4 portrait pictures, with an interval of 0.1 seconds between each interception, save the intercepted pictures into the img_list list through the list.append method, if the smart lock owner is recognized, output Find + loaded image face ID, otherwise output Find Stranger.
+
+#### Display face image in notebook
+
+```python
+for i in img_lists:
+    plt.figure()
+    plt.imshow(i)
+```
+After recognition, use pyplot.figure and pyplot.imshow to display the captured face image.
+
 ### <a id="rtmp">RTMP</a>
 
 This is the video streaming module
