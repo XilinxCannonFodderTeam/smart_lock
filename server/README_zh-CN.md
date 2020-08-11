@@ -44,88 +44,30 @@ def add_action(self,action,action_name=None):
 
 `add_action`则是添加动作的接口函数，`action`必须是
 ### 状态的恢复与保存
-由于是一个简单的项目，所以状态恢复与保存都是存储在json文件当中，没有将设备的topic存入数据库，相应的代码如下。
+由于是一个简单的项目，所以状态恢复与保存都是存储在json文件当中，没有将设备的topic存入数据库，对应的状态保存的接口为`save_to_config`，而状态恢复的接口为`load_from_config`，默认从`./congif.json`中保存与读取。
 
-其中状态的恢复代码如下：
-```python
-def load_from_config(self, config_file_path = None):
-    """
-        此函数需要与提供的save_to_config一起使用
-        config_file_path：的默认位置是同级目录下的config.json
-        return：返回0表示成功的从配置文件导入,否则为失败
-    """
-    config_file_path = config_file_path if config_file_path else self.__config_file_path
-    if not os.path.isfile(config_file_path):
-        return -1
-    if self.__on_running:
-        self.loop_stop()
-    with open(config_file_path,"r") as f:
-        info = f.read()
-    info_to_save = json.loads(info)
-    self.client_id = info_to_save["client_id"]
-    self.action_load = info_to_save["action_load"]
-    self.action_func_name = info_to_save["action_func_name"]
-    self.host = info_to_save["host"]
-    self.port = info_to_save["port"]
-    self.keepalive = info_to_save["keepalive"]
-    self.topic = info_to_save["topic"]
-    self.topic["2device"] = set(self.topic["2device"])
-    self.topic["2app_deivce"] = set(self.topic["2app_deivce"])
-    self.topic_in_use.clear()
-    for key in self.topic.keys():
-        for topic in self.topic[key]:
-            self.topic_in_use.add(topic)
-    self.device_pair_app2device = info_to_save["device_pair_app2device"]
-    self.device_pair_device2app = info_to_save["device_pair_device2app"]
-    self.use_quick_search = info_to_save["use_quick_search"]
-    self.qos = info_to_save["qos"]
-    self.__on_running = info_to_save["on_running"]
-    self.__on_connect = info_to_save["on_connect"]
-    self.device_type = info_to_save["device_type"]
-    self.action.clear()
-    self.__set_action_by_action_load()
-    self.__topic_subscribe = info_to_save["topic_subscribe"]
-    if self.__on_running:
-        self.__on_running = False
-        self.run(self.device_type, self.host, self.port)
-        for topic in self.__topic_subscribe:
-            self.subscribe(topic, self.qos)
-            self.topic_in_use.add(topic)
-    return 0
-```
-状态的保存如下：
-```python
-def save_to_config(self, config_file_path = None):
-    """
-        此函数需要与提供的load_from_config一起使用
-        config_file_path：的默认位置是同级目录下的config.json
-    """
-    config_file_path = config_file_path if config_file_path else self.__config_file_path
-    info_to_save = {}
-    info_to_save["client_id"] = self.client_id
-    info_to_save["action_load"] = self.action_load
-    info_to_save["action_func_name"] = self.action_func_name
-    info_to_save["host"] = self.host
-    info_to_save["port"] = self.port
-    info_to_save["keepalive"] = self.keepalive
-    info_to_save["topic"] = copy.deepcopy(self.topic)
-    info_to_save["topic"]["2device"] = list(info_to_save["topic"]["2device"])
-    info_to_save["topic"]["2app_deivce"] = list(info_to_save["topic"]["2app_deivce"])
-    info_to_save["device_pair_app2device"] = self.device_pair_app2device
-    info_to_save["device_pair_device2app"] = self.device_pair_device2app
-    info_to_save["use_quick_search"] = self.use_quick_search
-    info_to_save["qos"] = self.qos
-    info_to_save["on_running"] = self.__on_running
-    info_to_save["on_connect"] = self.__on_connect
-    info_to_save["device_type"] = self.device_type
-    info_to_save["topic_subscribe"] = self.__topic_subscribe
-    with open(config_file_path,'w') as f:
-        f.write(json.dumps(info_to_save))
-```
 
 ### 远程添加代码与动态导入
+这里的代码远程的写入是利用mqtt传输py文件实现的，只需要将`mqtt_client.py`中的`_save_input_py_file`添加到action列表就可以完成。
 
+而动态导入则是将`mqtt_client.py`中的`_load_python_file`添加到action列表，然后就可以有此功能。
 
 ### 单例模式的支持
+单例模式打开需要将`mqtt_client.py`中的`ON_SINGLE_PATTERN`置为True，然后就会在所有的线程中创建的`device_interface`都是同一个。
+
 
 ## server2
+`server2.py`中的实现基于`mqtt_client`中的`device_interface`以及flask。
+
+服务器的mqtt接口有：
+1. lock：上锁的接口，此处实现是向所有设备发送上锁命令
+2. unlock：开锁的接口，此处实现是向所有设备发送关锁命令
+3. find_stranger：发现陌生人的接口，此接口执行向对应的topic发送陌生人发现的指令，并给出陌生人图片的链接
+4. hand_shake：握手的接口，用于设备接入
+
+flask实现啊的接口有：
+1. `/hello`：用于测试服务器是否正确开启
+2. `/lock`：和mqtt的`lock`一致
+3. `/unlock`：和mqtt的`unlock`一致
+4. `/test`：开锁和关锁的接口，依据upload的报文进行开锁或关锁
+5. `/get_pic`：用于下载陌生人的图像
