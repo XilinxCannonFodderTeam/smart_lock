@@ -20,7 +20,7 @@ Open your Ultra96 terminal, make sure it is connected to the Internet, and enter
 sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lock.git
 ```
 
-> Note: This project currently uses the dlib library. Because the dlib library is relatively large, the compilation time is longer.
+> Note: This project currently uses the dlib library. Because the dlib library is relatively large, the compilation time is longer. We will switch to the Vitis AI library soon.
 
 ## Future Plan
 
@@ -30,6 +30,7 @@ sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lo
 2. Add device and app pair instead of adding manually
 3. Support automatic restart, restart directly when an error occurs
 4. Use thread pool to optimize the asynchronous call of callback
+5. Use Vitis AI library
 
 ## Contact Us
 

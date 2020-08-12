@@ -16,7 +16,7 @@
 sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lock.git
 ```
 
-> 注意：本项目目前使用dlib库，由于dlib库较为庞大，编译时间较长。
+> 注意：本项目目前使用dlib库，由于dlib库较为庞大，编译时间较长。我们将于不久之后换用Vitis AI库。
 
 ## 未来计划
 
@@ -26,6 +26,7 @@ sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lo
 2. 设备和app对的添加，而非手工加入
 3. 支持自动重启，当出现错误推出时直接重启
 4. 对回调的异步调用，使用线程池进行优化
+5. 使用Vitis AI库
 
 ## 联系我们
 
