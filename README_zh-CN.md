@@ -4,6 +4,8 @@
 
 本项目是基于MQTT，Flutter以及Dlib和Ultra 96板卡的智能门锁系统。APP端具有添加设备、远程控制以及视频串流的功能，设备端能够识别陌生人后拍照回传并且支持多用户操作，服务器端则负责设备间通信等操作。
 
+> 你可以在我们的[团队仓库](https://github.com/XilinxCannonFodderTeam/smart_lock)中找到最新版本
+
 ## Quick Start
 
 本项目的setup没有经过测试，所以不保证正确执行，建议直接git下整个项目后按步骤依次对app,device和server端进行配置。
@@ -13,6 +15,8 @@
 ```bash
 sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lock.git
 ```
+
+> 注意：本项目目前使用dlib库，由于dlib库较为庞大，编译时间较长。
 
 ## 未来计划
 
@@ -35,15 +39,19 @@ sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lo
 
 主要使用了开源的OpenCV、dlib、ffmpeg库。
 
-它包含有[face_server](#face_server)、[RTMP](#rtmp)模块。
+它包含有[face_server](#face_server)、[RTMP](#rtmp)、[esp8266](device/esp8266/README_zh-CN.md)模块。
 
 ### APP端
 
 主要使用Dart编程语言和flutter框架。
 
+> 注意：我们的APP在本仓库中作为子模块提供，请使用相关的submodule命令下载。
+
 ### 服务器端
 
 主要使用Python实现，基于paho-mqtt和Flask框架
+
+你可以在相应[目录](server/README_zh-CN.md)下找到说明文档
 
 ## 模块说明
 

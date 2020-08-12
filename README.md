@@ -8,6 +8,8 @@ This is a Smart_Lock Project using Ultra96_V2 and PYNQ.
 
 This project is a smart door lock system based on MQTT, Flutter, Dlib and Ultra 96 boards. The APP side has the functions of adding devices, remote control, and video streaming. The device side can recognize strangers and take pictures and send back and support multi-user operations. The server side is responsible for operations such as communication between devices.
 
+> You can find the latest version in our [team repository](https://github.com/XilinxCannonFodderTeam/smart_lock)
+
 ## Quick Start
 
 The setup of this project has not been tested, so the correct execution is not guaranteed. It is recommended to directly download the entire project and configure the app, device and server side by step.
@@ -17,6 +19,8 @@ Open your Ultra96 terminal, make sure it is connected to the Internet, and enter
 ```bash
 sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lock.git
 ```
+
+> Note: This project currently uses the dlib library. Because the dlib library is relatively large, the compilation time is longer.
 
 ## Future Plan
 
@@ -40,15 +44,19 @@ The project is divided into device side, APP side and server side
 
 The open source OpenCV, dlib, and ffmpeg libraries are mainly used.
 
-It contains [face_server](#face_server), [RTMP](#rtmp) module.
+It contains [face_server](#face_server), [RTMP](#rtmp), [esp8266](device/esp8266/README.md) module.
 
 ### APP
 
 Mainly use Dart programming language and flutter framework.
 
+> Note: Our APP is provided as a submodule in this repository, please use the relevant submodule command to download.
+
 ### server
 
-Mainly use Python programming language, paho-mqtt and Flask framework
+Mainly use Python programming language, paho-mqtt and Flask framework.
+
+You can find the documentation under the corresponding [directory](server/README.md)
 
 ## Module specification
 
@@ -58,7 +66,7 @@ This module is mainly used for face recognition.
 
 The face_api module is developed based on OpenCV and dlib.
 
->Before the project runs, you need to download a picture of the smart lock owner in the directory
+> Before the project runs, you need to download a picture of the smart lock owner in the directory
 
 First, the detect, encode_face function is introduced from this module to detect and encode faces, and then the matplotlib and time libraries are introduced to display the captured images in the Jupyter Notebook environment and measure the recognition time.
 
