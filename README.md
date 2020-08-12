@@ -9,13 +9,14 @@ This is a Smart_Lock Project using Ultra96_V2 and PYNQ.
 This project is a smart door lock system based on MQTT, Flutter, Dlib and Ultra 96 boards. The APP side has the functions of adding devices, remote control, and video streaming. The device side can recognize strangers and take pictures and send back and support multi-user operations. The server side is responsible for operations such as communication between devices.
 
 ## Quick Start
+
 The setup of this project has not been tested, so the correct execution is not guaranteed. It is recommended to directly download the entire project and configure the app, device and server side by step.
 
 Open your Ultra96 terminal, make sure it is connected to the Internet, and enter:
-```
+
+```bash
 sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lock.git
 ```
-
 
 ## Future Plan
 
@@ -25,6 +26,11 @@ sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lo
 2. Add device and app pair instead of adding manually
 3. Support automatic restart, restart directly when an error occurs
 4. Use thread pool to optimize the asynchronous call of callback
+
+## Contact Us
+
+If you have any questions or problems, please contact us.
+Email Address: <664696421@qq.com>
 
 ## Project Structure
 
@@ -41,11 +47,12 @@ It contains [face_server](#face_server), [RTMP](#rtmp) module.
 Mainly use Dart programming language and flutter framework.
 
 ### server
+
 Mainly use Python programming language, paho-mqtt and Flask framework
 
 ## Module specification
 
-### <a id="face_server">face_server</a>
+### face_server
 
 This module is mainly used for face recognition.
 
@@ -88,9 +95,10 @@ for i in img_lists:
     plt.figure()
     plt.imshow(i)
 ```
+
 After recognition, use pyplot.figure and pyplot.imshow to display the captured face image.
 
-### <a id="rtmp">RTMP</a>
+### RTMP
 
 This is the video streaming module
 

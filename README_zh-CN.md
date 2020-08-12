@@ -5,10 +5,12 @@
 本项目是基于MQTT，Flutter以及Dlib和Ultra 96板卡的智能门锁系统。APP端具有添加设备、远程控制以及视频串流的功能，设备端能够识别陌生人后拍照回传并且支持多用户操作，服务器端则负责设备间通信等操作。
 
 ## Quick Start
+
 本项目的setup没有经过测试，所以不保证正确执行，建议直接git下整个项目后按步骤依次对app,device和server端进行配置。
 
 打开你的Ultra96的终端，确保联网，输入：
-```
+
+```bash
 sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lock.git
 ```
 
@@ -20,6 +22,10 @@ sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lo
 2. 设备和app对的添加，而非手工加入
 3. 支持自动重启，当出现错误推出时直接重启
 4. 对回调的异步调用，使用线程池进行优化
+
+## 联系我们
+
+如果你有任何问题，请联系我们。邮件地址: <664696421@qq.com>
 
 ## 项目结构
 
@@ -36,11 +42,12 @@ sudo pip3 install upgrade git+https://github.com/XilinxCannonFodderTeam/smart_lo
 主要使用Dart编程语言和flutter框架。
 
 ### 服务器端
+
 主要使用Python实现，基于paho-mqtt和Flask框架
 
 ## 模块说明
 
-### <a id="face_server">face_server</a>
+### face_server
 
 这个模块主要用于人脸识别。
 
@@ -86,7 +93,7 @@ for i in img_lists:
 
 可在识别后，使用 pyplot.figure 和 pyplot.imshow 显示拍摄到的人脸图像。
 
-### <a id="rtmp">RTMP</a>
+### RTMP
 
 这是视频串流模块
 
